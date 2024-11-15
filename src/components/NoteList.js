@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { getNotes } from "../api";
 import {
   Box,
-  Button,
   Alert,
   AlertIcon,
   Heading,
@@ -21,20 +20,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import {
-  InfoIcon,
-  EditIcon,
-  DeleteIcon,
-  AddIcon,
-  HamburgerIcon,
-  SearchIcon,
-  LinkIcon,
-} from "@chakra-ui/icons";
+import { AddIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
-import jsPDF from "jspdf"; // Import jsPDF
+import jsPDF from "jspdf";
 import NoteDetail from "./NoteDetail";
 import DeleteNote from "./DeleteNote";
-import ShareNote from "./ShareNote";
 
 // Star Icons
 const StarOutlineIcon = (props) => (
@@ -65,6 +55,7 @@ const StarIcon = (props) => (
   </svg>
 );
 
+// Note List Component
 const NoteList = ({ token }) => {
   const [notes, setNotes] = useState([]);
   const [error, setError] = useState(null);
@@ -73,7 +64,6 @@ const NoteList = ({ token }) => {
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [selectedNote, setSelectedNote] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [sharingNoteId, setSharingNoteId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
   const [heading, setHeading] = useState("Your Notes");
@@ -123,7 +113,7 @@ const NoteList = ({ token }) => {
         .share({
           title: note.title,
           text: note.content,
-          url: window.location.href + `/notes/${note._id}`,
+          url: `${window.location.href}/notes/${note._id}`,
         })
         .catch((error) => console.error("Error sharing:", error));
     } else {
@@ -203,8 +193,52 @@ const NoteList = ({ token }) => {
 
   return (
     <Box p={5} borderRadius="md" color="white" width="100%" position="relative">
-      <Heading size="lg" mb={4}>
+      <Heading
+        size="lg"
+        mb={4}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         {heading}
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            icon={<HamburgerIcon />}
+            aria-label="Menu"
+            variant="outline"
+            colorScheme="teal"
+            position="absolute"
+            top={4}
+            right={4}
+          />
+          <MenuList>
+            <MenuItem
+              onClick={() => {
+                setSortOrder("title");
+                setSelectedFilter("Sort by Title");
+              }}
+            >
+              Sort by Title
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setSortOrder("date");
+                setSelectedFilter("Sort by Creation Date");
+              }}
+            >
+              Sort by Creation Date
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setSortOrder("modified");
+                setSelectedFilter("Sort by Last Modified Date");
+              }}
+            >
+              Sort by Last Modified Date
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </Heading>
       {error && (
         <Alert status="error" mb={4}>
@@ -239,39 +273,6 @@ const NoteList = ({ token }) => {
                   md: "block",
                 }}
               />
-              <Menu>
-                <MenuButton
-                  as={IconButton}
-                  icon={<HamburgerIcon />}
-                  aria-label="Filter"
-                />
-                <MenuList>
-                  <MenuItem
-                    onClick={() => {
-                      setSortOrder("title");
-                      setSelectedFilter("Sort by Title");
-                    }}
-                  >
-                    Sort by Title
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setSortOrder("date");
-                      setSelectedFilter("Sort by Creation Date");
-                    }}
-                  >
-                    Sort by Creation Date
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setSortOrder("modified");
-                      setSelectedFilter("Sort by Last Modified Date");
-                    }}
-                  >
-                    Sort by Last Modified Date
-                  </MenuItem>
-                </MenuList>
-              </Menu>
               <Text color="white" ml={2}>
                 {selectedFilter}
               </Text>
@@ -362,56 +363,31 @@ const NoteList = ({ token }) => {
                             />
                           </motion.div>
                         </Tooltip>
-                        {/* Share Button */}
-                        <Tooltip label="Share" aria-label="Share">
-                          <IconButton
-                            onClick={() => handleShareNote(note)}
-                            colorScheme="blue"
-                            aria-label="Share Note"
-                            size="sm"
-                            icon={<LinkIcon />}
+                        {/* Three-dot menu for each note */}
+                        <Menu>
+                          <MenuButton
+                            as={IconButton}
+                            icon={<HamburgerIcon />}
+                            aria-label="Options"
                           />
-                        </Tooltip>
-                        {/* Export to PDF Button */}
-                        <Tooltip
-                          label="Export to PDF"
-                          aria-label="Export to PDF"
-                        >
-                          <IconButton
-                            onClick={() => exportToPDF(note)}
-                            colorScheme="green"
-                            aria-label="Export Note as PDF"
-                            size="sm"
-                            icon={<AddIcon />} // You can replace this with an appropriate PDF icon
-                          />
-                        </Tooltip>
-                        <Tooltip label="View Details" aria-label="View Details">
-                          <Button
-                            onClick={() => handleShowDetails(note)}
-                            colorScheme="teal"
-                            variant="solid"
-                            size="sm"
-                            leftIcon={<InfoIcon />}
-                          />
-                        </Tooltip>
-                        <Tooltip label="Edit" aria-label="Edit">
-                          <Button
-                            onClick={() => handleEdit(note._id)}
-                            colorScheme="blue"
-                            variant="solid"
-                            size="sm"
-                            leftIcon={<EditIcon />}
-                          />
-                        </Tooltip>
-                        <Tooltip label="Delete" aria-label="Delete">
-                          <Button
-                            onClick={() => handleDelete(note._id)}
-                            colorScheme="red"
-                            variant="solid"
-                            size="sm"
-                            leftIcon={<DeleteIcon />}
-                          />
-                        </Tooltip>
+                          <MenuList>
+                            <MenuItem onClick={() => handleShowDetails(note)}>
+                              View Details
+                            </MenuItem>
+                            <MenuItem onClick={() => handleEdit(note._id)}>
+                              Edit
+                            </MenuItem>
+                            <MenuItem onClick={() => handleShareNote(note)}>
+                              Share
+                            </MenuItem>
+                            <MenuItem onClick={() => exportToPDF(note)}>
+                              Export to PDF
+                            </MenuItem>
+                            <MenuItem onClick={() => handleDelete(note._id)}>
+                              Delete
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
                       </HStack>
                     </GridItem>
                   ))}
@@ -442,7 +418,7 @@ const NoteList = ({ token }) => {
         borderRadius="full"
         boxShadow="lg"
         _hover={{ boxShadow: "xl" }}
-        display={{ base: "flex", md: "none" }} // Only show on mobile
+        display={{ base: "flex", md: "none" }} // Show only on mobile
       />
     </Box>
   );
