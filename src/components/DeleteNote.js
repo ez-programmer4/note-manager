@@ -67,8 +67,8 @@ const DeleteNote = ({ noteId, setNotes, onCancel }) => {
               Confirm Delete
             </AlertDialogHeader>
             <AlertDialogBody>
-              Are you sure you want to delete this note? This action cannot be
-              undone.
+              Are you sure you want to delete this note? This action cannot to
+              be undone.
             </AlertDialogBody>
             <AlertDialogFooter>
               <Button onClick={onClose}>Cancel</Button>
