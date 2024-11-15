@@ -27,11 +27,14 @@ const DeleteNote = ({ noteId, setNotes, onCancel }) => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/notes/${noteId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        `https://note-manager-backend-1.onrender.com/api/notes/${noteId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setNotes((prevNotes) => prevNotes.filter((note) => note._id !== noteId));
       navigate("/dashboard"); // Redirect to the dashboard after deletion
     } catch (err) {

@@ -24,10 +24,13 @@ const Register = () => {
 
     try {
       // Update the API call to the local URL
-      await axios.post("http://localhost:5000/api/users/register", {
-        username,
-        password,
-      });
+      await axios.post(
+        "https://note-manager-backend-1.onrender.com/users/register",
+        {
+          username,
+          password,
+        }
+      );
       alert("Registration successful! You can now log in.");
       navigate("/login");
     } catch (error) {

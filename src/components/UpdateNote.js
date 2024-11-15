@@ -35,7 +35,7 @@ const UpdateNote = () => {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/notes/${id}`,
+          `https://note-manager-backend-1.onrender.com/api/notes/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -61,7 +61,7 @@ const UpdateNote = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:5000/api/notes/${id}`,
+        `https://note-manager-backend-1.onrender.com/api/notes/${id}`,
         { ...note, tags: note.tags.split(",").map((tag) => tag.trim()) },
         {
           headers: { Authorization: `Bearer ${token}` },

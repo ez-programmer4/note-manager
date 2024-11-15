@@ -30,7 +30,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/users/login",
+        "https://note-manager-backend-1.onrender.com/api/users/login",
         { username, password },
         {
           headers: {

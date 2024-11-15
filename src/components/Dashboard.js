@@ -26,11 +26,14 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://localhost:5000/api/notes", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://note-manager-backend-1.onrender.com/api/notes",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setNotes(response.data);
     } catch (error) {
