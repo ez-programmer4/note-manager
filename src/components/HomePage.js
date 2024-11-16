@@ -6,13 +6,13 @@ import { AddIcon, ViewIcon } from "@chakra-ui/icons"; // Import icons from Chakr
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth(); // Get the currentUser from AuthContext
+  const { currentUser } = useAuth();
 
   const handleCreateNote = () => {
     if (currentUser) {
-      navigate("/add"); // Navigate to create note if authenticated
+      navigate("/add");
     } else {
-      navigate("/login"); // Navigate to login if not authenticated
+      navigate("/login");
     }
   };
 
