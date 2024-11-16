@@ -1,3 +1,5 @@
+// src/components/RichTextEditor.js
+
 import React from "react";
 import ReactQuill from "react-quill"; // Import React Quill
 import "react-quill/dist/quill.bubble.css"; // Import Quill styles
@@ -10,7 +12,7 @@ const RichTextEditor = ({ value, onChange }) => {
       theme="bubble" // or "snow" based on your preference
       modules={{
         toolbar: [
-          [{ header: [1, 2, false] }], // Header sizes
+          [{ header: [1, 2, 3, 4, false] }], // Header sizes
           [{ font: [] }], // Font selection
           [{ align: [] }], // Text alignment
           ["bold", "italic", "underline"], // Basic formatting

@@ -130,9 +130,12 @@ const CreateNote = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               placeholder="Select category"
-              bg="gray.700"
-              color="white"
+              bg="gray.700" // Background color
+              color="white" // Text color
               borderColor="whiteAlpha.600"
+              _placeholder={{ color: "whiteAlpha.500" }}
+              _focus={{ borderColor: "teal.400" }} // Change border color on focus
+              _hover={{ borderColor: "teal.500" }} // Change border color on hover
             >
               <option value="personal">Personal</option>
               <option value="work">Work</option>
