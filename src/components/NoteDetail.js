@@ -38,6 +38,15 @@ const NoteDetail = ({ note, onClose }) => {
           fontSize="md"
           lineHeight="1.5"
           color="gray.300"
+          maxH="300px" // Set a maximum height
+          overflowY="auto" // Enable vertical scrolling
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 10, // Limit to 10 lines (adjust as needed)
+          }}
         />
         <Divider borderColor="whiteAlpha.300" />
         <Text fontSize="md" color="white">

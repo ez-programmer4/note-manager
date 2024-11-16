@@ -192,7 +192,14 @@ const NoteList = ({ token }) => {
   };
 
   return (
-    <Box p={5} borderRadius="md" color="white" width="100%" position="relative">
+    <Box
+      p={5}
+      borderRadius="md"
+      color="white"
+      width="100%"
+      position="relative"
+      bg="gray.800" // Set the background color
+    >
       <Heading
         size="lg"
         mb={4}
@@ -212,7 +219,9 @@ const NoteList = ({ token }) => {
             top={4}
             right={4}
           />
-          <MenuList>
+          <MenuList bg="gray.700">
+            {" "}
+            {/* Set menu background color */}
             <MenuItem
               onClick={() => {
                 setSortOrder("title");
@@ -261,7 +270,7 @@ const NoteList = ({ token }) => {
                 placeholder="Search by title"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                bg="gray.700"
+                bg="gray.700" // Set input background color
                 color="white"
                 borderColor="whiteAlpha.600"
                 _placeholder={{ color: "whiteAlpha.600" }}
@@ -310,7 +319,7 @@ const NoteList = ({ token }) => {
                       p={4}
                       borderWidth="1px"
                       borderRadius="md"
-                      bg="gray.700"
+                      bg="gray.700" // Set item background color
                       display="flex"
                       flexDirection="column"
                       justifyContent="space-between"
@@ -370,7 +379,9 @@ const NoteList = ({ token }) => {
                             icon={<HamburgerIcon />}
                             aria-label="Options"
                           />
-                          <MenuList>
+                          <MenuList bg="gray.700">
+                            {" "}
+                            {/* Set menu background color */}
                             <MenuItem onClick={() => handleShowDetails(note)}>
                               View Details
                             </MenuItem>

@@ -15,7 +15,9 @@ const Navbar = () => {
   const isLoggedIn = Boolean(accessToken); // Check if the user is logged in
 
   return (
-    <Box p={4}>
+    <Box p={4} bg="teal.500">
+      {" "}
+      {/* Set background color */}
       <Flex alignItems="center">
         <Heading size="md" color="white" mr={8}>
           Note Manager
@@ -24,20 +26,30 @@ const Navbar = () => {
         {!isLoggedIn ? (
           <>
             <Link to="/login">
-              <Button colorScheme="teal" variant="outline" mr={4}>
+              <Button colorScheme="teal" variant="outline" mr={4} size="md">
+                {" "}
+                {/* Standardize button size */}
                 Log In
               </Button>
             </Link>
             <Link to="/register">
-              <Button colorScheme="teal" variant="solid">
+              <Button colorScheme="teal" variant="solid" size="md">
+                {" "}
+                {/* Standardize button size */}
                 Register
               </Button>
             </Link>
           </>
         ) : (
           <>
-            {/* Removed the My Notes button */}
-            <Button colorScheme="teal" variant="solid" onClick={handleLogout}>
+            <Button
+              colorScheme="teal"
+              variant="solid"
+              onClick={handleLogout}
+              size="md"
+            >
+              {" "}
+              {/* Standardize button size */}
               Logout
             </Button>
           </>

@@ -16,8 +16,6 @@ import NoteList from "./components/NoteList"; // Component for displaying notes
 import HomePage from "./components/HomePage"; // Import the HomePage component
 
 const App = () => {
-  const { colorMode, toggleColorMode } = useColorMode(); // Correctly use useColorMode
-
   return (
     <ChakraProvider theme={theme}>
       <AuthProvider>
