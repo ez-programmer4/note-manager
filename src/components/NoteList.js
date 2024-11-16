@@ -26,20 +26,13 @@ import jsPDF from "jspdf";
 import NoteDetail from "./NoteDetail";
 import DeleteNote from "./DeleteNote";
 import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  IconButton,
-} from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
-import {
   EditIcon,
   DeleteIcon,
   ViewIcon,
   ShareIcon,
   DownloadIcon,
 } from "@chakra-ui/icons";
+
 // Star Icons
 const StarOutlineIcon = (props) => (
   <svg
@@ -234,15 +227,13 @@ const NoteList = ({ token }) => {
             right={4}
           />
           <MenuList bg="black" borderColor="gray.700">
-            {" "}
-            {/* Set menu background color to black */}
             <MenuItem
               onClick={() => {
                 setSortOrder("title");
                 setSelectedFilter("Sort by Title");
               }}
-              color="white" // Set menu item text color to white
-              icon={<SortAlphaAscIcon />} // Add an icon for sorting by title
+              color="white"
+              icon={<SortAlphaAscIcon />} // Add appropriate icon
             >
               Sort by Title
             </MenuItem>
@@ -251,8 +242,8 @@ const NoteList = ({ token }) => {
                 setSortOrder("date");
                 setSelectedFilter("Sort by Creation Date");
               }}
-              color="white" // Set menu item text color to white
-              icon={<CalendarIcon />} // Add an icon for sorting by date
+              color="white"
+              icon={<CalendarIcon />} // Add appropriate icon
             >
               Sort by Creation Date
             </MenuItem>
@@ -261,8 +252,8 @@ const NoteList = ({ token }) => {
                 setSortOrder("modified");
                 setSelectedFilter("Sort by Last Modified Date");
               }}
-              color="white" // Set menu item text color to white
-              icon={<TimeIcon />} // Add an icon for sorting by modified date
+              color="white"
+              icon={<TimeIcon />} // Add appropriate icon
             >
               Sort by Last Modified Date
             </MenuItem>
@@ -287,20 +278,18 @@ const NoteList = ({ token }) => {
               p={2}
               borderRadius="md"
             >
-              {" "}
-              {/* Set filter background color */}
               <IconButton
                 icon={<SearchIcon />}
                 aria-label="Search"
                 onClick={() => setSearchVisible((prev) => !prev)}
                 display={{ base: "flex", md: "none" }} // Show only on mobile
-                color="white" // Set button icon color
+                color="white"
               />
               <Input
                 placeholder="Search by title"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                bg="gray.700" // Set input background color
+                bg="gray.700"
                 color="white"
                 borderColor="whiteAlpha.600"
                 _placeholder={{ color: "whiteAlpha.600" }}
@@ -349,7 +338,7 @@ const NoteList = ({ token }) => {
                       p={4}
                       borderWidth="1px"
                       borderRadius="md"
-                      bg="gray.700" // Set item background color
+                      bg="gray.700"
                       display="flex"
                       flexDirection="column"
                       justifyContent="space-between"
@@ -402,7 +391,6 @@ const NoteList = ({ token }) => {
                             />
                           </motion.div>
                         </Tooltip>
-                        {/* Three-dot menu for each note */}
                         <Menu>
                           <MenuButton
                             as={IconButton}
@@ -410,40 +398,38 @@ const NoteList = ({ token }) => {
                             aria-label="Options"
                           />
                           <MenuList bg="black" borderColor="gray.700">
-                            {" "}
-                            {/* Set menu background color to black */}
                             <MenuItem
                               onClick={() => handleShowDetails(note)}
-                              color="white" // Set menu item text color to white
-                              icon={<ViewIcon />} // Add an icon for viewing details
+                              color="white"
+                              icon={<ViewIcon />}
                             >
                               View Details
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleEdit(note._id)}
-                              color="white" // Set menu item text color to white
-                              icon={<EditIcon />} // Add an icon for editing
+                              color="white"
+                              icon={<EditIcon />}
                             >
                               Edit
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleShareNote(note)}
-                              color="white" // Set menu item text color to white
-                              icon={<ShareIcon />} // Add an icon for sharing
+                              color="white"
+                              icon={<ShareIcon />}
                             >
                               Share
                             </MenuItem>
                             <MenuItem
                               onClick={() => exportToPDF(note)}
-                              color="white" // Set menu item text color to white
-                              icon={<DownloadIcon />} // Add an icon for exporting to PDF
+                              color="white"
+                              icon={<DownloadIcon />}
                             >
                               Export to PDF
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleDelete(note._id)}
-                              color="white" // Set menu item text color to white
-                              icon={<DeleteIcon />} // Add an icon for deleting
+                              color="white"
+                              icon={<DeleteIcon />}
                             >
                               Delete
                             </MenuItem>
