@@ -2,13 +2,13 @@ import React from "react";
 import { Box, Heading, Text, Button, VStack, Divider } from "@chakra-ui/react";
 import { CloseIcon, EditIcon } from "@chakra-ui/icons";
 import ShareNote from "./ShareNote";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const NoteDetail = ({ note, onClose }) => {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const handleEdit = () => {
-    navigate(`/edit/${note._id}`); // Navigate to the edit page with the note ID
+    navigate(`/edit/${note._id}`);
   };
 
   return (
@@ -40,12 +40,11 @@ const NoteDetail = ({ note, onClose }) => {
           color="gray.300"
           maxH="300px" // Set a maximum height
           overflowY="auto" // Enable vertical scrolling
+          whiteSpace="pre-wrap" // Preserve whitespace and line breaks
+          wordBreak="break-word" // Break long words to prevent overflow
           style={{
+            display: "block",
             overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
-            WebkitBoxOrient: "vertical",
-            WebkitLineClamp: 10, // Limit to 10 lines (adjust as needed)
           }}
         />
         <Divider borderColor="whiteAlpha.300" />
@@ -61,9 +60,9 @@ const NoteDetail = ({ note, onClose }) => {
       <Box mt={4} display="flex" justifyContent="space-between">
         <Button
           colorScheme="blue"
-          onClick={handleEdit} // Edit button functionality
+          onClick={handleEdit}
           leftIcon={<EditIcon />}
-          mr={2} // Margin right for spacing
+          mr={2}
         >
           Edit
         </Button>
