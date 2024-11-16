@@ -110,18 +110,19 @@ const CreateNote = () => {
             <FormLabel mt={4} color="whiteAlpha.800">
               Content
             </FormLabel>
-            <RichTextEditor
-              value={content}
-              onChange={setContent}
-              style={{ height: "500px" }} // Adjust height as needed
-            />
             <Box
               mb={4}
-              border="1px"
+              borderWidth={1}
               borderColor="whiteAlpha.600"
               borderRadius="md"
               overflow="hidden"
-            ></Box>
+            >
+              <RichTextEditor
+                value={content}
+                onChange={setContent}
+                style={{ height: "400px" }} // Set a specific height for better visibility
+              />
+            </Box>
             <FormLabel mt={4} color="whiteAlpha.800">
               Category
             </FormLabel>
