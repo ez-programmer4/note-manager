@@ -198,7 +198,7 @@ const NoteList = ({ token }) => {
       color="white"
       width="100%"
       position="relative"
-      bg="gray.800" // Set the background color
+      bg="gray.800" // Set the main background color
     >
       <Heading
         size="lg"
@@ -219,7 +219,7 @@ const NoteList = ({ token }) => {
             top={4}
             right={4}
           />
-          <MenuList bg="gray.700">
+          <MenuList bg="gray.800" borderColor="gray.700">
             {" "}
             {/* Set menu background color */}
             <MenuItem
@@ -379,7 +379,7 @@ const NoteList = ({ token }) => {
                             icon={<HamburgerIcon />}
                             aria-label="Options"
                           />
-                          <MenuList bg="gray.700">
+                          <MenuList bg="gray.800" borderColor="gray.700">
                             {" "}
                             {/* Set menu background color */}
                             <MenuItem onClick={() => handleShowDetails(note)}>
