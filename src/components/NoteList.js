@@ -230,6 +230,7 @@ const NoteList = ({ token }) => {
             position="absolute"
             top={4}
             right={4}
+            bg="black"
           />
           <MenuList bg="black" borderColor="gray.700">
             <MenuItem
