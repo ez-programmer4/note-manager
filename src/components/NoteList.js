@@ -230,16 +230,18 @@ const NoteList = ({ token }) => {
             position="absolute"
             top={4}
             right={4}
-            bg="black"
+            bg="white" // Change button background to white
           />
-          <MenuList bg="black" borderColor="gray.700">
+          <MenuList bg="white" borderColor="gray.700">
+            {" "}
+            // Change menu background to white
             <MenuItem
               onClick={() => {
                 setSortOrder("title");
                 setSelectedFilter("Sort by Title");
               }}
-              color="white"
-              icon={<ArrowUpIcon />} // Using the updated icon
+              color="black" // Change text color to black
+              icon={<ArrowUpIcon />}
             >
               Sort by Title
             </MenuItem>
@@ -248,7 +250,7 @@ const NoteList = ({ token }) => {
                 setSortOrder("date");
                 setSelectedFilter("Sort by Creation Date");
               }}
-              color="white"
+              color="black" // Change text color to black
               icon={<CalendarIcon />}
             >
               Sort by Creation Date
@@ -258,7 +260,7 @@ const NoteList = ({ token }) => {
                 setSortOrder("modified");
                 setSelectedFilter("Sort by Last Modified Date");
               }}
-              color="white"
+              color="black" // Change text color to black
               icon={<TimeIcon />}
             >
               Sort by Last Modified Date
@@ -402,39 +404,42 @@ const NoteList = ({ token }) => {
                             as={IconButton}
                             icon={<HamburgerIcon />}
                             aria-label="Options"
+                            bg="white" // Change button background to white
                           />
-                          <MenuList bg="black" borderColor="gray.700">
+                          <MenuList bg="white" borderColor="gray.700">
+                            {" "}
+                            // Change menu background to white
                             <MenuItem
                               onClick={() => handleShowDetails(note)}
-                              color="white"
+                              color="black" // Change text color to black
                               icon={<ViewIcon />}
                             >
                               View Details
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleEdit(note._id)}
-                              color="white"
+                              color="black" // Change text color to black
                               icon={<EditIcon />}
                             >
                               Edit
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleShareNote(note)}
-                              color="white"
-                              icon={<ExternalLinkIcon />} // Using ExternalLinkIcon for sharing
+                              color="black" // Change text color to black
+                              icon={<ExternalLinkIcon />}
                             >
                               Share
                             </MenuItem>
                             <MenuItem
                               onClick={() => exportToPDF(note)}
-                              color="white"
+                              color="black" // Change text color to black
                               icon={<DownloadIcon />}
                             >
                               Export to PDF
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleDelete(note._id)}
-                              color="white"
+                              color="black" // Change text color to black
                               icon={<DeleteIcon />}
                             >
                               Delete
