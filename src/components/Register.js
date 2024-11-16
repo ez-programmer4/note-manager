@@ -11,6 +11,7 @@ import {
   AlertIcon,
   VStack,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 
@@ -18,16 +19,18 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // New loading state
   const navigate = useNavigate();
-  const toast = useToast(); // For toast notifications
+  const toast = useToast();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true); // Start loading
 
     try {
       await axios.post(
-        "https://note-manager-backend-1.onrender.com/users/register",
+        "https://note-manager-backend-1.onrender.com/api/users/register", // Ensure the correct endpoint
         { username, password }
       );
       toast({
@@ -40,7 +43,12 @@ const Register = () => {
       navigate("/login");
     } catch (error) {
       console.error(error);
-      setError("Registration failed. Please try again.");
+      const message =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
+      setError(message); // Set specific error message
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -72,7 +80,7 @@ const Register = () => {
         )}
         <form onSubmit={handleRegister}>
           <VStack spacing={4} align="stretch">
-            <FormControl>
+            <FormControl isInvalid={!username && error}>
               <FormLabel color="gray.600">Username</FormLabel>
               <Input
                 type="text"
@@ -88,7 +96,7 @@ const Register = () => {
                 }}
               />
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={!password && error}>
               <FormLabel color="gray.600">Password</FormLabel>
               <Input
                 type="password"
@@ -104,8 +112,13 @@ const Register = () => {
                 }}
               />
             </FormControl>
-            <Button colorScheme="teal" type="submit" width="full">
-              Register
+            <Button
+              colorScheme="teal"
+              type="submit"
+              width="full"
+              isLoading={loading}
+            >
+              {loading ? <Spinner size="sm" /> : "Register"}
             </Button>
           </VStack>
         </form>
