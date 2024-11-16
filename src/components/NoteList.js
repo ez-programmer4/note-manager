@@ -20,18 +20,23 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { AddIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  HamburgerIcon,
+  SearchIcon,
+  EditIcon,
+  DeleteIcon,
+  ViewIcon,
+  DownloadIcon,
+  ExternalLinkIcon, // For sharing
+  ArrowUpIcon, // Use this for sorting
+  CalendarIcon,
+  TimeIcon,
+} from "@chakra-ui/icons"; // Import all necessary icons
 import { motion } from "framer-motion";
 import jsPDF from "jspdf";
 import NoteDetail from "./NoteDetail";
 import DeleteNote from "./DeleteNote";
-import {
-  EditIcon,
-  DeleteIcon,
-  ViewIcon,
-  ShareIcon,
-  DownloadIcon,
-} from "@chakra-ui/icons";
 
 // Star Icons
 const StarOutlineIcon = (props) => (
@@ -205,7 +210,7 @@ const NoteList = ({ token }) => {
       color="white"
       width="100%"
       position="relative"
-      bg="gray.800" // Set the main background color
+      bg="gray.800"
     >
       <Heading
         size="lg"
@@ -233,7 +238,7 @@ const NoteList = ({ token }) => {
                 setSelectedFilter("Sort by Title");
               }}
               color="white"
-              icon={<SortAlphaAscIcon />} // Add appropriate icon
+              icon={<ArrowUpIcon />} // Using the updated icon
             >
               Sort by Title
             </MenuItem>
@@ -243,7 +248,7 @@ const NoteList = ({ token }) => {
                 setSelectedFilter("Sort by Creation Date");
               }}
               color="white"
-              icon={<CalendarIcon />} // Add appropriate icon
+              icon={<CalendarIcon />}
             >
               Sort by Creation Date
             </MenuItem>
@@ -253,7 +258,7 @@ const NoteList = ({ token }) => {
                 setSelectedFilter("Sort by Last Modified Date");
               }}
               color="white"
-              icon={<TimeIcon />} // Add appropriate icon
+              icon={<TimeIcon />}
             >
               Sort by Last Modified Date
             </MenuItem>
@@ -415,7 +420,7 @@ const NoteList = ({ token }) => {
                             <MenuItem
                               onClick={() => handleShareNote(note)}
                               color="white"
-                              icon={<ShareIcon />}
+                              icon={<ExternalLinkIcon />} // Using ExternalLinkIcon for sharing
                             >
                               Share
                             </MenuItem>
