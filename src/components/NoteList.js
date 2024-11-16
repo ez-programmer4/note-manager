@@ -25,7 +25,21 @@ import { motion } from "framer-motion";
 import jsPDF from "jspdf";
 import NoteDetail from "./NoteDetail";
 import DeleteNote from "./DeleteNote";
-
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+} from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import {
+  EditIcon,
+  DeleteIcon,
+  ViewIcon,
+  ShareIcon,
+  DownloadIcon,
+} from "@chakra-ui/icons";
 // Star Icons
 const StarOutlineIcon = (props) => (
   <svg
@@ -219,15 +233,16 @@ const NoteList = ({ token }) => {
             top={4}
             right={4}
           />
-          <MenuList bg="gray.800" borderColor="gray.700">
+          <MenuList bg="black" borderColor="gray.700">
             {" "}
-            {/* Set menu background color */}
+            {/* Set menu background color to black */}
             <MenuItem
               onClick={() => {
                 setSortOrder("title");
                 setSelectedFilter("Sort by Title");
               }}
-              color="white" // Set menu item text color
+              color="white" // Set menu item text color to white
+              icon={<SortAlphaAscIcon />} // Add an icon for sorting by title
             >
               Sort by Title
             </MenuItem>
@@ -236,7 +251,8 @@ const NoteList = ({ token }) => {
                 setSortOrder("date");
                 setSelectedFilter("Sort by Creation Date");
               }}
-              color="white" // Set menu item text color
+              color="white" // Set menu item text color to white
+              icon={<CalendarIcon />} // Add an icon for sorting by date
             >
               Sort by Creation Date
             </MenuItem>
@@ -245,7 +261,8 @@ const NoteList = ({ token }) => {
                 setSortOrder("modified");
                 setSelectedFilter("Sort by Last Modified Date");
               }}
-              color="white" // Set menu item text color
+              color="white" // Set menu item text color to white
+              icon={<TimeIcon />} // Add an icon for sorting by modified date
             >
               Sort by Last Modified Date
             </MenuItem>
@@ -392,38 +409,41 @@ const NoteList = ({ token }) => {
                             icon={<HamburgerIcon />}
                             aria-label="Options"
                           />
-                          <MenuList bg="gray.800" borderColor="gray.700">
+                          <MenuList bg="black" borderColor="gray.700">
                             {" "}
-                            {/* Set menu background color */}
+                            {/* Set menu background color to black */}
                             <MenuItem
                               onClick={() => handleShowDetails(note)}
-                              color="white"
+                              color="white" // Set menu item text color to white
+                              icon={<ViewIcon />} // Add an icon for viewing details
                             >
-                              {" "}
-                              {/* Set menu item text color */}
                               View Details
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleEdit(note._id)}
-                              color="white"
+                              color="white" // Set menu item text color to white
+                              icon={<EditIcon />} // Add an icon for editing
                             >
                               Edit
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleShareNote(note)}
-                              color="white"
+                              color="white" // Set menu item text color to white
+                              icon={<ShareIcon />} // Add an icon for sharing
                             >
                               Share
                             </MenuItem>
                             <MenuItem
                               onClick={() => exportToPDF(note)}
-                              color="white"
+                              color="white" // Set menu item text color to white
+                              icon={<DownloadIcon />} // Add an icon for exporting to PDF
                             >
                               Export to PDF
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleDelete(note._id)}
-                              color="white"
+                              color="white" // Set menu item text color to white
+                              icon={<DeleteIcon />} // Add an icon for deleting
                             >
                               Delete
                             </MenuItem>
