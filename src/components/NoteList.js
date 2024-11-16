@@ -227,6 +227,7 @@ const NoteList = ({ token }) => {
                 setSortOrder("title");
                 setSelectedFilter("Sort by Title");
               }}
+              color="white" // Set menu item text color
             >
               Sort by Title
             </MenuItem>
@@ -235,6 +236,7 @@ const NoteList = ({ token }) => {
                 setSortOrder("date");
                 setSelectedFilter("Sort by Creation Date");
               }}
+              color="white" // Set menu item text color
             >
               Sort by Creation Date
             </MenuItem>
@@ -243,6 +245,7 @@ const NoteList = ({ token }) => {
                 setSortOrder("modified");
                 setSelectedFilter("Sort by Last Modified Date");
               }}
+              color="white" // Set menu item text color
             >
               Sort by Last Modified Date
             </MenuItem>
@@ -259,12 +262,22 @@ const NoteList = ({ token }) => {
       ) : (
         <>
           {showFilters && (
-            <HStack mb={4} spacing={4} width="100%">
+            <HStack
+              mb={4}
+              spacing={4}
+              width="100%"
+              bg="black"
+              p={2}
+              borderRadius="md"
+            >
+              {" "}
+              {/* Set filter background color */}
               <IconButton
                 icon={<SearchIcon />}
                 aria-label="Search"
                 onClick={() => setSearchVisible((prev) => !prev)}
                 display={{ base: "flex", md: "none" }} // Show only on mobile
+                color="white" // Set button icon color
               />
               <Input
                 placeholder="Search by title"
@@ -382,19 +395,36 @@ const NoteList = ({ token }) => {
                           <MenuList bg="gray.800" borderColor="gray.700">
                             {" "}
                             {/* Set menu background color */}
-                            <MenuItem onClick={() => handleShowDetails(note)}>
+                            <MenuItem
+                              onClick={() => handleShowDetails(note)}
+                              color="white"
+                            >
+                              {" "}
+                              {/* Set menu item text color */}
                               View Details
                             </MenuItem>
-                            <MenuItem onClick={() => handleEdit(note._id)}>
+                            <MenuItem
+                              onClick={() => handleEdit(note._id)}
+                              color="white"
+                            >
                               Edit
                             </MenuItem>
-                            <MenuItem onClick={() => handleShareNote(note)}>
+                            <MenuItem
+                              onClick={() => handleShareNote(note)}
+                              color="white"
+                            >
                               Share
                             </MenuItem>
-                            <MenuItem onClick={() => exportToPDF(note)}>
+                            <MenuItem
+                              onClick={() => exportToPDF(note)}
+                              color="white"
+                            >
                               Export to PDF
                             </MenuItem>
-                            <MenuItem onClick={() => handleDelete(note._id)}>
+                            <MenuItem
+                              onClick={() => handleDelete(note._id)}
+                              color="white"
+                            >
                               Delete
                             </MenuItem>
                           </MenuList>
