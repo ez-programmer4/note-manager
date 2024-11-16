@@ -1,3 +1,5 @@
+// src/components/CreateNote.js
+
 import React, { useState } from "react";
 import {
   Box,
@@ -10,10 +12,19 @@ import {
   AlertIcon,
   VStack,
   Select,
+  CloseButton,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { createNote } from "../api";
 import RichTextEditor from "./RichTextEditor"; // Import the RichTextEditor
+
+const CustomAlert = ({ status, message, onClose }) => (
+  <Alert status={status} mt={4} borderRadius="md" variant="solid">
+    <AlertIcon />
+    {message}
+    <CloseButton onClick={onClose} position="absolute" right="8px" top="8px" />
+  </Alert>
+);
 
 const CreateNote = () => {
   const [title, setTitle] = useState("");
@@ -21,11 +32,13 @@ const CreateNote = () => {
   const [category, setCategory] = useState("personal"); // Default category
   const [tags, setTags] = useState(""); // Tags as a string
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     try {
       const response = await createNote({
@@ -35,7 +48,8 @@ const CreateNote = () => {
         tags,
       });
       if (response.status === 201) {
-        navigate("/dashboard");
+        setSuccess("Note created successfully!");
+        setTimeout(() => navigate("/dashboard"), 2000); // Navigate after 2 seconds
       } else {
         setError("Failed to create note");
       }
@@ -68,10 +82,18 @@ const CreateNote = () => {
             Add New Note
           </Heading>
           {error && (
-            <Alert status="error" mt={4}>
-              <AlertIcon />
-              {error}
-            </Alert>
+            <CustomAlert
+              status="error"
+              message={error}
+              onClose={() => setError("")}
+            />
+          )}
+          {success && (
+            <CustomAlert
+              status="success"
+              message={success}
+              onClose={() => setSuccess("")}
+            />
           )}
           <FormControl as="form" onSubmit={handleSubmit} mt={4}>
             <FormLabel color="whiteAlpha.800">Title</FormLabel>
@@ -98,7 +120,7 @@ const CreateNote = () => {
               <RichTextEditor
                 value={content}
                 onChange={setContent}
-                style={{ height: "300px" }}
+                style={{ height: "300px" }} // Adjust height as needed
               />
             </Box>
             <FormLabel mt={4} color="whiteAlpha.800">

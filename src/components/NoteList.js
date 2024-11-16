@@ -28,11 +28,11 @@ import {
   DeleteIcon,
   ViewIcon,
   DownloadIcon,
-  ExternalLinkIcon, // For sharing
-  ArrowUpIcon, // Use this for sorting
+  ExternalLinkIcon,
+  ArrowUpIcon,
   CalendarIcon,
   TimeIcon,
-} from "@chakra-ui/icons"; // Import all necessary icons
+} from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import jsPDF from "jspdf";
 import NoteDetail from "./NoteDetail";
@@ -83,7 +83,6 @@ const NoteList = ({ token }) => {
   const [searchVisible, setSearchVisible] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch notes from the API
   const fetchNotes = async () => {
     setLoading(true);
     try {
@@ -211,6 +210,7 @@ const NoteList = ({ token }) => {
       width="100%"
       position="relative"
       bg="gray.800"
+      overflow="hidden" // Prevent overflow
     >
       <Heading
         size="lg"
@@ -230,17 +230,15 @@ const NoteList = ({ token }) => {
             position="absolute"
             top={4}
             right={4}
-            bg="white" // Change button background to white
+            bg="white"
           />
           <MenuList bg="white" borderColor="gray.700">
-            {" "}
-            // Change menu background to white
             <MenuItem
               onClick={() => {
                 setSortOrder("title");
                 setSelectedFilter("Sort by Title");
               }}
-              color="black" // Change text color to black
+              color="black"
               icon={<ArrowUpIcon />}
             >
               Sort by Title
@@ -250,7 +248,7 @@ const NoteList = ({ token }) => {
                 setSortOrder("date");
                 setSelectedFilter("Sort by Creation Date");
               }}
-              color="black" // Change text color to black
+              color="black"
               icon={<CalendarIcon />}
             >
               Sort by Creation Date
@@ -260,7 +258,7 @@ const NoteList = ({ token }) => {
                 setSortOrder("modified");
                 setSelectedFilter("Sort by Last Modified Date");
               }}
-              color="black" // Change text color to black
+              color="black"
               icon={<TimeIcon />}
             >
               Sort by Last Modified Date
@@ -290,7 +288,7 @@ const NoteList = ({ token }) => {
                 icon={<SearchIcon />}
                 aria-label="Search"
                 onClick={() => setSearchVisible((prev) => !prev)}
-                display={{ base: "flex", md: "none" }} // Show only on mobile
+                display={{ base: "flex", md: "none" }}
                 color="white"
               />
               <Input
@@ -335,8 +333,8 @@ const NoteList = ({ token }) => {
                 <Grid
                   templateColumns={{
                     base: "1fr",
-                    md: "1fr 1fr",
-                    lg: "1fr 1fr 1fr",
+                    md: "repeat(2, 1fr)",
+                    lg: "repeat(3, 1fr)",
                   }}
                   gap={4}
                 >
@@ -404,42 +402,40 @@ const NoteList = ({ token }) => {
                             as={IconButton}
                             icon={<HamburgerIcon />}
                             aria-label="Options"
-                            bg="white" // Change button background to white
+                            bg="white"
                           />
                           <MenuList bg="white" borderColor="gray.700">
-                            {" "}
-                            // Change menu background to white
                             <MenuItem
                               onClick={() => handleShowDetails(note)}
-                              color="black" // Change text color to black
+                              color="black"
                               icon={<ViewIcon />}
                             >
                               View Details
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleEdit(note._id)}
-                              color="black" // Change text color to black
+                              color="black"
                               icon={<EditIcon />}
                             >
                               Edit
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleShareNote(note)}
-                              color="black" // Change text color to black
+                              color="black"
                               icon={<ExternalLinkIcon />}
                             >
                               Share
                             </MenuItem>
                             <MenuItem
                               onClick={() => exportToPDF(note)}
-                              color="black" // Change text color to black
+                              color="black"
                               icon={<DownloadIcon />}
                             >
                               Export to PDF
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleDelete(note._id)}
-                              color="black" // Change text color to black
+                              color="black"
                               icon={<DeleteIcon />}
                             >
                               Delete

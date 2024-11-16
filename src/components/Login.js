@@ -71,13 +71,16 @@ const Login = () => {
       display="flex"
       alignItems="center"
       justifyContent="center"
+      bgGradient="linear(to-r, teal.400, blue.500)"
     >
       <Box
         p={8}
-        borderRadius="md"
-        boxShadow="lg"
+        borderRadius="lg"
+        boxShadow="2xl"
         bg="gray.800"
         width={{ base: "90%", sm: "400px" }}
+        transition="0.3s"
+        _hover={{ boxShadow: "lg" }} // Add hover effect
       >
         <VStack spacing={4} as="form" onSubmit={handleSubmit}>
           <Heading textAlign="center" color="white">
@@ -102,6 +105,10 @@ const Login = () => {
               color="white"
               borderColor="whiteAlpha.600"
               _placeholder={{ color: "whiteAlpha.600" }}
+              _focus={{
+                borderColor: "blue.400",
+                boxShadow: "0 0 0 1px blue.400",
+              }}
             />
           </FormControl>
           <FormControl isRequired>
@@ -118,10 +125,15 @@ const Login = () => {
                 color="white"
                 borderColor="whiteAlpha.600"
                 _placeholder={{ color: "whiteAlpha.600" }}
+                _focus={{
+                  borderColor: "blue.400",
+                  boxShadow: "0 0 0 1px blue.400",
+                }}
               />
               <InputRightElement>
                 <Button
                   variant="link"
+                  color="white"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? "Hide" : "Show"}
@@ -135,6 +147,7 @@ const Login = () => {
             type="submit"
             width="full"
             isLoading={loading}
+            borderRadius="md"
           >
             Log In
           </Button>
