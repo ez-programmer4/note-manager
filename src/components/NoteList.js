@@ -170,18 +170,20 @@ const NoteList = ({ token }) => {
       <div>${note.content}</div>
     `;
 
-    // Optional: Styling the temporary element
+    // Style the temporary element to ensure it is captured correctly
     pdfContent.style.position = "absolute";
-    pdfContent.style.visibility = "hidden"; // Hide it but keep it in the flow
+    pdfContent.style.opacity = "0"; // Make it invisible but still capture it
+    pdfContent.style.pointerEvents = "none"; // Prevent any interaction
     document.body.appendChild(pdfContent);
 
-    // Wait for the content to be rendered
-    await new Promise((resolve) => {
-      setTimeout(resolve, 100); // Delay to ensure rendering
-    });
+    // Wait for the content to render
+    await new Promise((resolve) => setTimeout(resolve, 100)); // Delay to ensure rendering
 
     // Use html2canvas to take a screenshot of the content
-    const canvas = await html2canvas(pdfContent, { logging: true });
+    const canvas = await html2canvas(pdfContent, {
+      logging: true,
+      useCORS: true,
+    });
     const imgData = canvas.toDataURL("image/png");
 
     // Create a PDF document
@@ -192,7 +194,6 @@ const NoteList = ({ token }) => {
     // Cleanup
     document.body.removeChild(pdfContent);
   };
-
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
