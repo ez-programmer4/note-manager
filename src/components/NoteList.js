@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getNotes } from "../api";
 import html2canvas from "html2canvas";
-
+import { getNotes } from "../api";
 import {
   Box,
   Alert,
@@ -163,37 +162,21 @@ const NoteList = ({ token }) => {
   };
 
   const exportToPDF = async (note) => {
-    // Create a temporary element to hold the HTML content
-    const pdfContent = document.createElement("div");
-    pdfContent.innerHTML = `
-      <h1 style="color: rgb(230, 0, 0);">${note.title}</h1>
-      <div>${note.content}</div>
-    `;
+    const doc = new jsPDF();
+    const noteContent = document.createElement("div");
 
-    // Style the temporary element to ensure it is captured correctly
-    pdfContent.style.position = "absolute";
-    pdfContent.style.opacity = "0"; // Make it invisible but still capture it
-    pdfContent.style.pointerEvents = "none"; // Prevent any interaction
-    document.body.appendChild(pdfContent);
+    // Set the inner HTML to the note's content
+    noteContent.innerHTML = note.content; // Assuming note.content contains HTML
 
-    // Wait for the content to render
-    await new Promise((resolve) => setTimeout(resolve, 100)); // Delay to ensure rendering
-
-    // Use html2canvas to take a screenshot of the content
-    const canvas = await html2canvas(pdfContent, {
-      logging: true,
-      useCORS: true,
-    });
+    // Use html2canvas to create a canvas from the note content
+    const canvas = await html2canvas(noteContent);
     const imgData = canvas.toDataURL("image/png");
 
-    // Create a PDF document
-    const doc = new jsPDF();
+    // Add the image to the PDF
     doc.addImage(imgData, "PNG", 10, 10);
     doc.save(`${note.title}.pdf`);
-
-    // Cleanup
-    document.body.removeChild(pdfContent);
   };
+
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
