@@ -163,35 +163,30 @@ const NoteList = ({ token }) => {
   };
 
   const exportToPDF = async (note) => {
-    // Create a temporary div to render the NoteDetail component
     const tempDiv = document.createElement("div");
     document.body.appendChild(tempDiv);
 
-    // Render the NoteDetail component into the temporary div
+    // Render the NoteDetail component
     ReactDOM.render(<NoteDetail note={note} onClose={() => {}} />, tempDiv);
 
-    // Use html2canvas to capture the rendered content
     try {
       const canvas = await html2canvas(tempDiv, {
         useCORS: true,
-        scale: 2, // Increase scale for better quality
+        scale: 2,
       });
       const imgData = canvas.toDataURL("image/png");
 
-      // Create a PDF document
       const doc = new jsPDF();
-      const imgWidth = 190; // Set the width of the image in the PDF
+      const imgWidth = 190; // Width of the image in PDF
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      // Add the image to the PDF
       doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-
-      // Save the PDF
       doc.save(`${note.title}.pdf`);
     } catch (error) {
       console.error("Error capturing the note detail:", error);
+      alert("Failed to export PDF. Please check the console for details.");
     } finally {
-      // Clean up: remove the temporary div from the DOM
+      // Clean up
       ReactDOM.unmountComponentAtNode(tempDiv);
       document.body.removeChild(tempDiv);
     }
