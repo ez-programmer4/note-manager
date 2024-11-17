@@ -162,6 +162,13 @@ const NoteList = ({ token }) => {
     }
   };
   const exportToPDF = async (note) => {
+    // Check if note is defined
+    if (!note) {
+      console.error("No note provided for export");
+      alert("No note available to export.");
+      return;
+    }
+
     const tempDiv = document.createElement("div");
     document.body.appendChild(tempDiv);
 
@@ -169,10 +176,14 @@ const NoteList = ({ token }) => {
     ReactDOM.render(<NoteDetail note={note} onClose={() => {}} />, tempDiv);
 
     try {
+      // Ensure the DOM has fully rendered before capturing it
+      await new Promise((resolve) => setTimeout(resolve, 100)); // Delay to allow rendering
+
       const canvas = await html2canvas(tempDiv, {
         useCORS: true,
         scale: 2,
       });
+
       const imgData = canvas.toDataURL("image/png");
 
       const doc = new jsPDF();
