@@ -161,44 +161,41 @@ const NoteList = ({ token }) => {
     }
   };
 
-  const exportToPDF = async (note) => {
-    const noteElement = document.getElementById(`note-${note._id}`);
+  const exportToPDF = (note) => {
+    const doc = new jsPDF();
+    const margin = 10;
 
-    if (!noteElement) {
-      console.error("Note element not found:", `note-${note._id}`);
-      return; // Exit if element is not found
-    }
+    // Title
+    doc.setFontSize(22);
+    doc.text("Note Details", margin, margin + 10);
 
-    try {
-      const canvas = await html2canvas(noteElement, {
-        useCORS: true, // Enable cross-origin image loading
-        scale: 2, // Increase scale for better quality
-        backgroundColor: null, // Set background transparent or a specific color
-      });
+    // Title
+    doc.setFontSize(16);
+    doc.text(`Title: ${note.title}`, margin, margin + 20);
 
-      const imgData = canvas.toDataURL("image/png");
-      const doc = new jsPDF();
-      const imgWidth = 190; // Set the width of the image in the PDF
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
+    // Content
+    doc.setFontSize(12);
+    doc.text("Content:", margin, margin + 30);
+    const contentLines = doc.splitTextToSize(note.content, 190 - margin * 2);
+    doc.text(contentLines, margin, margin + 40);
 
-      // Add image to PDF and handle page breaks
-      while (heightLeft >= 0) {
-        doc.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-        heightLeft -= doc.internal.pageSize.height;
-        position -= doc.internal.pageSize.height; // Move position for next page
-        if (heightLeft >= 0) {
-          doc.addPage(); // Add a new page if there's more content
-        }
-      }
+    // Category
+    doc.text(
+      `Category: ${note.category}`,
+      margin,
+      margin + 40 + contentLines.length * 5
+    );
 
-      doc.save(`${note.title}.pdf`);
-    } catch (error) {
-      console.error("Error capturing the note:", error);
-    }
+    // Tags
+    doc.text(
+      `Tags: ${Array.isArray(note.tags) ? note.tags.join(", ") : "No tags"}`,
+      margin,
+      margin + 45 + contentLines.length * 5
+    );
+
+    // Save the PDF
+    doc.save(`${note.title}.pdf`);
   };
-
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
