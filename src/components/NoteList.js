@@ -162,7 +162,12 @@ const NoteList = ({ token }) => {
   };
 
   const exportToPDF = async (note) => {
-    const noteElement = document.getElementById(`note-${note._id}`); // Make sure this ID corresponds to the element containing the styled content
+    const noteElement = document.getElementById(`note-${note._id}`);
+
+    if (!noteElement) {
+      console.error("Note element not found:", `note-${note._id}`);
+      return; // Exit if element is not found
+    }
 
     try {
       const canvas = await html2canvas(noteElement, {
@@ -366,7 +371,7 @@ const NoteList = ({ token }) => {
                 >
                   {sortedNotes.map((note) => (
                     <GridItem
-                      key={note._id}
+                      id={`note-${note._id}`}
                       p={4}
                       borderWidth="1px"
                       borderRadius="md"
