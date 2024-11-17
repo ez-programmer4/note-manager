@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import html2canvas from "html2canvas";
+import ReactDOM from "react-dom";
 import { getNotes } from "../api";
 import {
   Box,
@@ -161,40 +162,39 @@ const NoteList = ({ token }) => {
     }
   };
 
-  const exportToPDF = (note) => {
-    const doc = new jsPDF();
-    const margin = 10;
+  const exportToPDF = async (note) => {
+    // Create a temporary div to render the NoteDetail component
+    const tempDiv = document.createElement("div");
+    document.body.appendChild(tempDiv);
 
-    // Title
-    doc.setFontSize(22);
-    doc.text("Note Details", margin, margin + 10);
+    // Render the NoteDetail component into the temporary div
+    ReactDOM.render(<NoteDetail note={note} onClose={() => {}} />, tempDiv);
 
-    // Title
-    doc.setFontSize(16);
-    doc.text(`Title: ${note.title}`, margin, margin + 20);
+    // Use html2canvas to capture the rendered content
+    try {
+      const canvas = await html2canvas(tempDiv, {
+        useCORS: true,
+        scale: 2, // Increase scale for better quality
+      });
+      const imgData = canvas.toDataURL("image/png");
 
-    // Content
-    doc.setFontSize(12);
-    doc.text("Content:", margin, margin + 30);
-    const contentLines = doc.splitTextToSize(note.content, 190 - margin * 2);
-    doc.text(contentLines, margin, margin + 40);
+      // Create a PDF document
+      const doc = new jsPDF();
+      const imgWidth = 190; // Set the width of the image in the PDF
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    // Category
-    doc.text(
-      `Category: ${note.category}`,
-      margin,
-      margin + 40 + contentLines.length * 5
-    );
+      // Add the image to the PDF
+      doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
 
-    // Tags
-    doc.text(
-      `Tags: ${Array.isArray(note.tags) ? note.tags.join(", ") : "No tags"}`,
-      margin,
-      margin + 45 + contentLines.length * 5
-    );
-
-    // Save the PDF
-    doc.save(`${note.title}.pdf`);
+      // Save the PDF
+      doc.save(`${note.title}.pdf`);
+    } catch (error) {
+      console.error("Error capturing the note detail:", error);
+    } finally {
+      // Clean up: remove the temporary div from the DOM
+      ReactDOM.unmountComponentAtNode(tempDiv);
+      document.body.removeChild(tempDiv);
+    }
   };
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
