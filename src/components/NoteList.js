@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getNotes } from "../api";
+import html2canvas from "html2canvas";
+
 import {
   Box,
   Alert,
@@ -160,12 +162,29 @@ const NoteList = ({ token }) => {
     }
   };
 
-  const exportToPDF = (note) => {
+  const exportToPDF = async (note) => {
+    // Create a temporary element to hold the HTML content
+    const pdfContent = document.createElement("div");
+    pdfContent.innerHTML = `
+      <h1 style="color: rgb(230, 0, 0);">${note.title}</h1>
+      <div>${note.content}</div>
+    `;
+
+    // Style the temporary element (optional)
+    pdfContent.style.display = "none"; // Hide it from the user
+    document.body.appendChild(pdfContent);
+
+    // Use html2canvas to take a screenshot of the content
+    const canvas = await html2canvas(pdfContent);
+    const imgData = canvas.toDataURL("image/png");
+
+    // Create a PDF document
     const doc = new jsPDF();
-    doc.setFont("Helvetica", "normal");
-    doc.text(`Title: ${note.title}`, 10, 10);
-    doc.text(`Content: ${note.content}`, 10, 20);
+    doc.addImage(imgData, "PNG", 10, 10);
     doc.save(`${note.title}.pdf`);
+
+    // Cleanup
+    document.body.removeChild(pdfContent);
   };
 
   const filteredNotes = notes.filter((note) =>
