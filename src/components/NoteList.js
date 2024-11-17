@@ -183,8 +183,10 @@ const NoteList = ({ token }) => {
       doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
       doc.save(`${note.title}.pdf`);
     } catch (error) {
-      console.error("Error capturing the note detail:", error);
-      alert("Failed to export PDF. Please check the console for details.");
+      console.error("Error during PDF export:", error);
+      alert(
+        "An error occurred while exporting the PDF. Check console for details."
+      );
     } finally {
       // Clean up
       ReactDOM.unmountComponentAtNode(tempDiv);
