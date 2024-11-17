@@ -161,7 +161,6 @@ const NoteList = ({ token }) => {
       console.error("Error updating favorite status:", error);
     }
   };
-
   const exportToPDF = async (note) => {
     const tempDiv = document.createElement("div");
     document.body.appendChild(tempDiv);
