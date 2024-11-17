@@ -168,12 +168,12 @@ const NoteList = ({ token }) => {
       return;
     }
 
-    // Get the element that contains the note details (you may need to adjust this selector)
-    const noteElement = document.getElementById(`note-${note._id}`);
+    // Get the element that contains the note details
+    const noteElement = document.getElementById(`note-detail-${note._id}`);
 
     if (!noteElement) {
-      console.error("Note element not found");
-      alert("Note element not found.");
+      console.error("Note detail element not found");
+      alert("Note detail element not found.");
       return;
     }
 
@@ -185,7 +185,7 @@ const NoteList = ({ token }) => {
 
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF();
-      const imgWidth = 300;
+      const imgWidth = 190; // Adjust image width for PDF
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);

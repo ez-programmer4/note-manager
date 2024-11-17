@@ -13,6 +13,7 @@ const NoteDetail = ({ note, onClose }) => {
 
   return (
     <Box
+      id={`note-detail-${note._id}`}
       p={6}
       bg="gray.700"
       borderRadius="md"
