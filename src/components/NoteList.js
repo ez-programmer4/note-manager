@@ -172,22 +172,22 @@ const NoteList = ({ token }) => {
     try {
       const canvas = await html2canvas(noteElement, {
         useCORS: true, // Enable cross-origin image loading
+        scale: 2, // Increase scale for better quality
+        backgroundColor: null, // Set background transparent or a specific color
       });
-      const imgData = canvas.toDataURL("image/png");
 
+      const imgData = canvas.toDataURL("image/png");
       const doc = new jsPDF();
       const imgWidth = 190; // Set the width of the image in the PDF
-      const pageHeight = doc.internal.pageSize.height;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       let heightLeft = imgHeight;
-
       let position = 0;
 
       // Add image to PDF and handle page breaks
       while (heightLeft >= 0) {
         doc.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-        position -= pageHeight; // Move position for next page
+        heightLeft -= doc.internal.pageSize.height;
+        position -= doc.internal.pageSize.height; // Move position for next page
         if (heightLeft >= 0) {
           doc.addPage(); // Add a new page if there's more content
         }
