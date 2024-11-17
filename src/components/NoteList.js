@@ -162,19 +162,18 @@ const NoteList = ({ token }) => {
   };
 
   const exportToPDF = async (note) => {
-    const doc = new jsPDF();
-    const noteContent = document.createElement("div");
+    const noteElement = document.getElementById(`note-${note._id}`); // Use the actual ID or class of the note element
 
-    // Set the inner HTML to the note's content
-    noteContent.innerHTML = note.content; // Assuming note.content contains HTML
+    try {
+      const canvas = await html2canvas(noteElement);
+      const imgData = canvas.toDataURL("image/png");
 
-    // Use html2canvas to create a canvas from the note content
-    const canvas = await html2canvas(noteContent);
-    const imgData = canvas.toDataURL("image/png");
-
-    // Add the image to the PDF
-    doc.addImage(imgData, "PNG", 10, 10);
-    doc.save(`${note.title}.pdf`);
+      const doc = new jsPDF();
+      doc.addImage(imgData, "PNG", 10, 10);
+      doc.save(`${note.title}.pdf`);
+    } catch (error) {
+      console.error("Error capturing the note:", error);
+    }
   };
 
   const filteredNotes = notes.filter((note) =>
