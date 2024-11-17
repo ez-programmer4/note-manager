@@ -162,7 +162,6 @@ const NoteList = ({ token }) => {
     }
   };
   const exportToPDF = async (note) => {
-    // Check if note is defined
     if (!note) {
       console.error("No note provided for export");
       alert("No note available to export.");
@@ -175,33 +174,40 @@ const NoteList = ({ token }) => {
     // Render the NoteDetail component
     ReactDOM.render(<NoteDetail note={note} onClose={() => {}} />, tempDiv);
 
-    try {
-      // Ensure the DOM has fully rendered before capturing it
-      await new Promise((resolve) => setTimeout(resolve, 100)); // Delay to allow rendering
+    // Wait for the component to render
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const canvas = await html2canvas(tempDiv, {
-        useCORS: true,
-        scale: 2,
+    // Capture the rendered component
+    html2canvas(tempDiv)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF();
+        const imgWidth = 190; // Adjust width as needed
+        const pageHeight = pdf.internal.pageSize.height;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+
+        let position = 0;
+
+        // Add image to PDF
+        pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        pdf.save(`${note.title}.pdf`);
+        document.body.removeChild(tempDiv); // Clean up
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+        alert("Failed to generate PDF. Please try again.");
+        document.body.removeChild(tempDiv); // Clean up
       });
-
-      const imgData = canvas.toDataURL("image/png");
-
-      const doc = new jsPDF();
-      const imgWidth = 190; // Width of the image in PDF
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-      doc.save(`${note.title}.pdf`);
-    } catch (error) {
-      console.error("Error during PDF export:", error);
-      alert(
-        "An error occurred while exporting the PDF. Check console for details."
-      );
-    } finally {
-      // Clean up
-      ReactDOM.unmountComponentAtNode(tempDiv);
-      document.body.removeChild(tempDiv);
-    }
   };
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
