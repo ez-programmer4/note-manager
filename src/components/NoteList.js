@@ -162,14 +162,32 @@ const NoteList = ({ token }) => {
   };
 
   const exportToPDF = async (note) => {
-    const noteElement = document.getElementById(`note-${note._id}`); // Use the actual ID or class of the note element
+    const noteElement = document.getElementById(`note-${note._id}`); // Make sure this ID corresponds to the element containing the styled content
 
     try {
-      const canvas = await html2canvas(noteElement);
+      const canvas = await html2canvas(noteElement, {
+        useCORS: true, // Enable cross-origin image loading
+      });
       const imgData = canvas.toDataURL("image/png");
 
       const doc = new jsPDF();
-      doc.addImage(imgData, "PNG", 10, 10);
+      const imgWidth = 190; // Set the width of the image in the PDF
+      const pageHeight = doc.internal.pageSize.height;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+
+      let position = 0;
+
+      // Add image to PDF and handle page breaks
+      while (heightLeft >= 0) {
+        doc.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        position -= pageHeight; // Move position for next page
+        if (heightLeft >= 0) {
+          doc.addPage(); // Add a new page if there's more content
+        }
+      }
+
       doc.save(`${note.title}.pdf`);
     } catch (error) {
       console.error("Error capturing the note:", error);
