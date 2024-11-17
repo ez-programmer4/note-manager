@@ -170,12 +170,18 @@ const NoteList = ({ token }) => {
       <div>${note.content}</div>
     `;
 
-    // Style the temporary element (optional)
-    pdfContent.style.display = "none"; // Hide it from the user
+    // Optional: Styling the temporary element
+    pdfContent.style.position = "absolute";
+    pdfContent.style.visibility = "hidden"; // Hide it but keep it in the flow
     document.body.appendChild(pdfContent);
 
+    // Wait for the content to be rendered
+    await new Promise((resolve) => {
+      setTimeout(resolve, 100); // Delay to ensure rendering
+    });
+
     // Use html2canvas to take a screenshot of the content
-    const canvas = await html2canvas(pdfContent);
+    const canvas = await html2canvas(pdfContent, { logging: true });
     const imgData = canvas.toDataURL("image/png");
 
     // Create a PDF document
