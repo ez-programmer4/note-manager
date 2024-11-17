@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import html2canvas from "html2canvas";
 import ReactDOM from "react-dom";
 import { getNotes } from "../api";
@@ -84,6 +84,7 @@ const NoteList = ({ token }) => {
   const [selectedFilter, setSelectedFilter] = useState("Sort by Title");
   const [searchVisible, setSearchVisible] = useState(false);
   const navigate = useNavigate();
+  const noteDetailRef = useRef(null);
 
   const fetchNotes = async () => {
     setLoading(true);
@@ -168,24 +169,22 @@ const NoteList = ({ token }) => {
       return;
     }
 
-    // Get the element that contains the note details
-    const noteElement = document.getElementById(`note-detail-${note._id}`);
-
-    if (!noteElement) {
+    // Check if noteDetailRef is set
+    if (!noteDetailRef.current) {
       console.error("Note detail element not found");
-      alert("Note detail element not found.");
+      alert("Note detail not available for export.");
       return;
     }
 
     try {
-      const canvas = await html2canvas(noteElement, {
+      const canvas = await html2canvas(noteDetailRef.current, {
         useCORS: true,
         scale: 2,
       });
 
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF();
-      const imgWidth = 190; // Adjust image width for PDF
+      const imgWidth = 190;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
@@ -343,6 +342,7 @@ const NoteList = ({ token }) => {
           {selectedNote ? (
             <NoteDetail
               note={selectedNote}
+              ref={noteDetailRef}
               onClose={() => {
                 setSelectedNote(null);
                 setShowFilters(true);
