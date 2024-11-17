@@ -168,46 +168,32 @@ const NoteList = ({ token }) => {
       return;
     }
 
-    const tempDiv = document.createElement("div");
-    document.body.appendChild(tempDiv);
+    // Get the element that contains the note details (you may need to adjust this selector)
+    const noteElement = document.getElementById(`note-${note._id}`);
 
-    // Render the NoteDetail component
-    ReactDOM.render(<NoteDetail note={note} onClose={() => {}} />, tempDiv);
+    if (!noteElement) {
+      console.error("Note element not found");
+      alert("Note element not found.");
+      return;
+    }
 
-    // Wait for the component to render
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // Capture the rendered component
-    html2canvas(tempDiv)
-      .then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF();
-        const imgWidth = 190; // Adjust width as needed
-        const pageHeight = pdf.internal.pageSize.height;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-
-        let position = 0;
-
-        // Add image to PDF
-        pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-
-        pdf.save(`${note.title}.pdf`);
-        document.body.removeChild(tempDiv); // Clean up
-      })
-      .catch((error) => {
-        console.error("Error generating PDF:", error);
-        alert("Failed to generate PDF. Please try again.");
-        document.body.removeChild(tempDiv); // Clean up
+    try {
+      const canvas = await html2canvas(noteElement, {
+        useCORS: true,
+        scale: 2,
       });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF();
+      const imgWidth = 190;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+      pdf.save(`${note.title}.pdf`);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Failed to generate PDF. Please check console for details.");
+    }
   };
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
