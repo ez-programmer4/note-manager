@@ -1,14 +1,35 @@
 import React from "react";
 import { Box, Heading, Text, Button, VStack, Divider } from "@chakra-ui/react";
-import { CloseIcon, EditIcon } from "@chakra-ui/icons";
+import { CloseIcon, EditIcon, DownloadIcon } from "@chakra-ui/icons";
 import ShareNote from "./ShareNote";
 import { useNavigate } from "react-router-dom";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const NoteDetail = ({ note, onClose }) => {
   const navigate = useNavigate();
 
   const handleEdit = () => {
     navigate(`/edit/${note._id}`);
+  };
+
+  const exportToPDF = async () => {
+    const element = document.getElementById(`note-detail-${note._id}`);
+    if (!element) return;
+
+    try {
+      const canvas = await html2canvas(element, { useCORS: true });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF();
+      const imgWidth = 190;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+      pdf.save(`${note.title}.pdf`);
+    } catch (error) {
+      console.error("Error exporting PDF:", error);
+      alert("Failed to export PDF. Please check the console for details.");
+    }
   };
 
   return (
@@ -39,14 +60,10 @@ const NoteDetail = ({ note, onClose }) => {
           fontSize="md"
           lineHeight="1.5"
           color="gray.300"
-          maxH="300px" // Set a maximum height
-          overflowY="auto" // Enable vertical scrolling
-          whiteSpace="pre-wrap" // Preserve whitespace and line breaks
-          wordBreak="break-word" // Break long words to prevent overflow
-          style={{
-            display: "block",
-            overflow: "hidden",
-          }}
+          maxH="300px"
+          overflowY="auto"
+          whiteSpace="pre-wrap"
+          wordBreak="break-word"
         />
         <Divider borderColor="whiteAlpha.300" />
         <Text fontSize="md" color="white">
@@ -66,6 +83,14 @@ const NoteDetail = ({ note, onClose }) => {
           mr={2}
         >
           Edit
+        </Button>
+        <Button
+          colorScheme="green"
+          onClick={exportToPDF}
+          leftIcon={<DownloadIcon />}
+          mr={2}
+        >
+          Export to PDF
         </Button>
         <Button colorScheme="gray" onClick={onClose} leftIcon={<CloseIcon />}>
           Close

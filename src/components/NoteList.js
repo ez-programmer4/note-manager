@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import html2canvas from "html2canvas";
-import ReactDOM from "react-dom";
 import { getNotes } from "../api";
 import {
   Box,
@@ -162,6 +161,7 @@ const NoteList = ({ token }) => {
       console.error("Error updating favorite status:", error);
     }
   };
+
   const exportToPDF = async (note) => {
     if (!note) {
       console.error("No note provided for export");
@@ -169,7 +169,6 @@ const NoteList = ({ token }) => {
       return;
     }
 
-    // Check if noteDetailRef is set
     if (!noteDetailRef.current) {
       console.error("Note detail element not found");
       alert("Note detail not available for export.");
@@ -194,6 +193,7 @@ const NoteList = ({ token }) => {
       alert("Failed to generate PDF. Please check console for details.");
     }
   };
+
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -236,7 +236,7 @@ const NoteList = ({ token }) => {
       width="100%"
       position="relative"
       bg="gray.800"
-      overflow="hidden" // Prevent overflow
+      overflow="hidden"
     >
       <Heading
         size="lg"
@@ -376,6 +376,7 @@ const NoteList = ({ token }) => {
                       flexDirection="column"
                       justifyContent="space-between"
                       overflow="hidden"
+                      key={note._id}
                     >
                       <Box position="relative">
                         <Box
@@ -499,7 +500,7 @@ const NoteList = ({ token }) => {
         borderRadius="full"
         boxShadow="lg"
         _hover={{ boxShadow: "xl" }}
-        display={{ base: "flex", md: "none" }} // Show only on mobile
+        display={{ base: "flex", md: "none" }}
       />
     </Box>
   );
