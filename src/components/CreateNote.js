@@ -1,171 +1,179 @@
 // src/components/CreateNote.js
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Box,
   Button,
   FormControl,
   FormLabel,
   Input,
+  Select,
   Heading,
   Alert,
   AlertIcon,
   VStack,
-  Select,
-  CloseButton,
+  Spinner,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { createNote } from "../api";
+import axios from "axios";
 import RichTextEditor from "./RichTextEditor"; // Import the RichTextEditor
 
-const CustomAlert = ({ status, message, onClose }) => (
-  <Alert status={status} mt={4} borderRadius="md" variant="solid">
-    <AlertIcon />
-    {message}
-    <CloseButton onClick={onClose} position="absolute" right="8px" top="8px" />
-  </Alert>
-);
-
 const CreateNote = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState(""); // Single content state
-  const [category, setCategory] = useState("personal"); // Default category
-  const [tags, setTags] = useState(""); // Tags as a string
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [note, setNote] = useState({
+    title: "",
+    content: "",
+    category: "personal", // Default category
+    tags: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null); // State for success message
   const navigate = useNavigate();
+  const editorRef = useRef(null); // Reference for the editor
 
+  // Handle form submission to create a new note
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setError(null); // Reset error state
+    setSuccess(null); // Reset success state
+    setLoading(true); // Show loading state
 
     try {
-      const response = await createNote({
-        title,
-        content,
-        category,
-        tags,
-      });
-      if (response.status === 201) {
-        setSuccess("Note created successfully!");
-        setTimeout(() => navigate("/dashboard"), 2000); // Navigate after 2 seconds
-      } else {
-        setError("Failed to create note");
-      }
-    } catch (error) {
-      setError("Failed to create note");
+      const token = localStorage.getItem("token");
+      const tagsArray = note.tags.split(",").map((tag) => tag.trim());
+      await axios.post(
+        "https://note-manager-backend-1.onrender.com/api/notes", // Adjust to your API endpoint
+        { ...note, tags: tagsArray },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setSuccess("Note created successfully!"); // Set success message
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000); // Redirect after 2 seconds
+    } catch (err) {
+      console.error("Error creating note:", err);
+      setError("Failed to create note. Please try again.");
+    } finally {
+      setLoading(false); // Hide loading state
     }
   };
 
+  // Handle content change to adjust editor height
+  const handleEditorChange = (content) => {
+    setNote({ ...note, content });
+    adjustEditorHeight();
+  };
+
+  const adjustEditorHeight = () => {
+    if (editorRef.current) {
+      editorRef.current.style.height = "auto"; // Reset height
+      editorRef.current.style.height = `${editorRef.current.scrollHeight}px`; // Set new height
+    }
+  };
+
+  // Loading state
+  if (loading) {
+    return <Spinner size="xl" color="teal.500" />;
+  }
+
+  // Error handling
+  if (error) {
+    return (
+      <Alert status="error">
+        <AlertIcon /> {error}
+      </Alert>
+    );
+  }
+
+  // Main rendering of the create note form
   return (
-    <Box
-      p={5}
-      minH="100vh"
-      bg="gray.900"
-      color="white"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Box
-        width={{ base: "90%", sm: "400px" }}
-        bg="gray.800"
-        borderRadius="lg"
-        boxShadow="lg"
-        p={6}
-        borderWidth={1}
-        borderColor="whiteAlpha.300"
-      >
-        <VStack spacing={4} align="start">
-          <Heading size="lg" color="teal.400">
-            Add New Note
-          </Heading>
-          {error && (
-            <CustomAlert
-              status="error"
-              message={error}
-              onClose={() => setError("")}
+    <Box p={5} borderRadius="md" color="white" bg="gray.800">
+      <Heading size="lg" mb={4}>
+        Create Note
+      </Heading>
+      {success && (
+        <Alert status="success" mb={4}>
+          <AlertIcon /> {success}
+        </Alert>
+      )}
+      <VStack as="form" onSubmit={handleSubmit} spacing={4} align="start">
+        <FormControl isRequired>
+          <FormLabel color="whiteAlpha.800">Title</FormLabel>
+          <Input
+            value={note.title}
+            onChange={(e) => setNote({ ...note, title: e.target.value })}
+            required
+            bg="gray.700"
+            color="white"
+            borderColor="whiteAlpha.600"
+          />
+        </FormControl>
+        <FormControl isRequired>
+          <FormLabel color="whiteAlpha.800">Content</FormLabel>
+          <Box width="100%" position="relative" marginBottom="16px">
+            <RichTextEditor
+              ref={editorRef} // Attach ref to the editor
+              value={note.content}
+              onChange={handleEditorChange} // Use the new handler
+              style={{
+                height: "150px", // Set an initial height
+                width: "100%", // Use 100% to fill the parent Box
+                overflow: "hidden", // Hide overflow for initial height
+                zIndex: 10, // High z-index to ensure it is on top
+                position: "relative", // Ensure it has a stacking context
+              }}
+              toolbarStyle={{
+                zIndex: 20, // Ensure toolbar is above everything else
+                position: "absolute", // Position it correctly
+              }}
             />
-          )}
-          {success && (
-            <CustomAlert
-              status="success"
-              message={success}
-              onClose={() => setSuccess("")}
-            />
-          )}
-          <FormControl as="form" onSubmit={handleSubmit} mt={4}>
-            <FormLabel color="whiteAlpha.800">Title</FormLabel>
-            <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter title"
-              required
-              bg="gray.700"
-              color="white"
-              borderColor="whiteAlpha.600"
-              _placeholder={{ color: "whiteAlpha.500" }}
-            />
-            <FormLabel mt={4} color="whiteAlpha.800">
-              Content
-            </FormLabel>
-            <Box
-              mb={4}
-              borderWidth={1}
-              borderColor="whiteAlpha.600"
-              borderRadius="md"
-            >
-              <RichTextEditor
-                value={content}
-                onChange={setContent}
-                style={{ height: "400px" }} // Set a specific height for better visibility
-              />
-            </Box>
-            <FormLabel mt={4} color="whiteAlpha.800">
-              Category
-            </FormLabel>
-            <Select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              placeholder="Select category"
-              bg="gray.700" // Background color
-              color="white" // Text color
-              borderColor="whiteAlpha.600"
-              _placeholder={{ color: "whiteAlpha.500" }}
-              _focus={{ borderColor: "teal.400" }} // Change border color on focus
-              _hover={{ borderColor: "teal.500" }} // Change border color on hover
-            >
-              <option value="personal">Personal</option>
-              <option value="work">Work</option>
-              <option value="study">Study</option>
-              <option value="other">Other</option>
-            </Select>
-            <FormLabel mt={4} color="whiteAlpha.800">
-              Tags (comma separated)
-            </FormLabel>
-            <Input
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              placeholder="Enter tags"
-              bg="gray.700"
-              color="white"
-              borderColor="whiteAlpha.600"
-              _placeholder={{ color: "whiteAlpha.500" }}
-            />
-            <Button
-              mt={6}
-              colorScheme="teal"
-              type="submit"
-              width="full"
-              borderRadius="md"
-              boxShadow="md"
-            >
-              Add Note
-            </Button>
-          </FormControl>
-        </VStack>
-      </Box>
+          </Box>
+        </FormControl>
+        <FormControl isRequired marginTop={20}>
+          <FormLabel color="whiteAlpha.800" mt={6}>
+            Category
+          </FormLabel>{" "}
+          {/* Added margin top */}
+          <Select
+            value={note.category}
+            onChange={(e) => setNote({ ...note, category: e.target.value })}
+            placeholder="Select category"
+            bg="gray.700" // Background color for the Select
+            color="white" // Text color for the Select
+            zIndex={8} // Lower than the RichTextEditor
+            _focus={{ borderColor: "teal.400" }} // Focus border color
+            _placeholder={{ color: "gray.400" }} // Placeholder text color
+            sx={{
+              option: {
+                bg: "gray.800", // Background for options
+                color: "white", // Text color for options
+                _hover: {
+                  bg: "teal.500", // Hover background color
+                  color: "black", // Hover text color
+                },
+              },
+            }}
+          >
+            <option value="personal">Personal</option>
+            <option value="work">Work</option>
+            <option value="study">Study</option>
+            <option value="other">Other</option>
+          </Select>
+        </FormControl>
+        <FormControl>
+          <FormLabel color="whiteAlpha.800">Tags (comma separated)</FormLabel>
+          <Input
+            value={note.tags}
+            onChange={(e) => setNote({ ...note, tags: e.target.value })}
+            placeholder="Enter tags"
+          />
+        </FormControl>
+        <Button mt={4} colorScheme="teal" type="submit">
+          Create Note
+        </Button>
+      </VStack>
     </Box>
   );
 };

@@ -1,3 +1,5 @@
+// src/components/Dashboard.js
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +13,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import NoteList from "./NoteList";
+import Footer from "./Footer"; // Import the Footer component
 
 const Dashboard = () => {
   const [notes, setNotes] = useState([]);
@@ -25,7 +28,6 @@ const Dashboard = () => {
 
     try {
       const token = localStorage.getItem("token");
-
       const response = await axios.get(
         "https://note-manager-backend-1.onrender.com/api/notes",
         {
@@ -55,7 +57,7 @@ const Dashboard = () => {
       bg={colorMode === "dark" ? "gray.800" : "white"}
       color={colorMode === "dark" ? "white" : "gray.800"}
     >
-      <VStack spacing={4} align="start">
+      <VStack spacing={4} align="start" flexGrow={1}>
         <Heading size="lg" color="teal.500">
           Dashboard
         </Heading>
@@ -82,6 +84,7 @@ const Dashboard = () => {
           <NoteList notes={notes} setNotes={setNotes} />
         )}
       </VStack>
+      <Footer /> {/* Add the Footer component here */}
     </Box>
   );
 };

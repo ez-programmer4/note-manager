@@ -125,17 +125,41 @@ const UpdateNote = () => {
             onChange={(content) => setNote({ ...note, content })}
           />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl isRequired marginTop={20}>
           <FormLabel color="whiteAlpha.800">Category</FormLabel>
           <Select
             value={note.category}
             onChange={(e) => setNote({ ...note, category: e.target.value })}
             placeholder="Select category"
+            bg="gray.700" // Background color for the Select
+            color="white" // Text color for the Select
+            _focus={{ borderColor: "teal.400" }} // Focus border color
+            _placeholder={{ color: "gray.400" }} // Placeholder text color
           >
-            <option value="personal">Personal</option>
-            <option value="work">Work</option>
-            <option value="study">Study</option>
-            <option value="other">Other</option>
+            <option
+              value="personal"
+              style={{ backgroundColor: "gray.800", color: "white" }}
+            >
+              Personal
+            </option>
+            <option
+              value="work"
+              style={{ backgroundColor: "gray.800", color: "white" }}
+            >
+              Work
+            </option>
+            <option
+              value="study"
+              style={{ backgroundColor: "gray.800", color: "white" }}
+            >
+              Study
+            </option>
+            <option
+              value="other"
+              style={{ backgroundColor: "gray.800", color: "white" }}
+            >
+              Other
+            </option>
           </Select>
         </FormControl>
         <FormControl>
