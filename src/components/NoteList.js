@@ -79,8 +79,10 @@ const NoteList = ({ token }) => {
   const [heading, setHeading] = useState("Your Notes");
   const [selectedFilter, setSelectedFilter] = useState("Sort by Title");
   const [searchVisible, setSearchVisible] = useState(false);
+  const [showAddIcon, setShowAddIcon] = useState(true); // State to manage visibility of the add icon
   const navigate = useNavigate();
   const noteDetailRef = useRef(null);
+  const footerRef = useRef(null); // Reference for the footer
 
   const fetchNotes = async () => {
     setLoading(true);
@@ -102,6 +104,24 @@ const NoteList = ({ token }) => {
   useEffect(() => {
     fetchNotes();
   }, [token]);
+
+  // Scroll event listener to manage the visibility of the Add Icon
+  useEffect(() => {
+    const handleScroll = () => {
+      if (footerRef.current) {
+        const footerPosition = footerRef.current.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+
+        setShowAddIcon(footerPosition > windowHeight); // Hide if the footer is visible
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleEdit = (noteId) => {
     navigate(`/edit/${noteId}`);
@@ -257,11 +277,13 @@ const NoteList = ({ token }) => {
           </MenuList>
         </Menu>
       </Heading>
+
       {error && (
         <Alert status="error" mb={4}>
           <AlertIcon /> {error}
         </Alert>
       )}
+
       {loading ? (
         <Spinner size="xl" color="teal.500" />
       ) : (
@@ -447,8 +469,13 @@ const NoteList = ({ token }) => {
         />
       )}
 
+      <Box ref={footerRef} as="footer" mt={10} padding={4}>
+        {/* Footer Content */}
+      </Box>
+
       <IconButton
         icon={<AddIcon />}
+        zIndex={10}
         colorScheme="teal"
         aria-label="Create Note"
         position="fixed"
@@ -459,7 +486,7 @@ const NoteList = ({ token }) => {
         borderRadius="full"
         boxShadow="lg"
         _hover={{ boxShadow: "xl" }}
-        display={{ base: "flex", md: "none" }}
+        display={showAddIcon ? { base: "flex", md: "none" } : "none"} // Toggle visibility based on state
       />
     </Box>
   );

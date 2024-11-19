@@ -6,7 +6,8 @@ import { Box, Text, Link } from "@chakra-ui/react";
 const Footer = () => {
   return (
     <Box
-      width="98vw"
+      zIndex={2}
+      width="100%"
       as="footer"
       py={4}
       textAlign="center"
