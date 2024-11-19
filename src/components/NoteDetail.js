@@ -14,24 +14,48 @@ const NoteDetail = ({ note, onClose }) => {
   };
 
   const exportToPDF = async () => {
-    const element = document.getElementById(`note-detail-${note._id}`);
-    if (!element) return;
+    const pdfContent = document.createElement("div");
+    pdfContent.style.padding = "20px"; // Increased padding for better spacing
+    pdfContent.style.backgroundColor = "#333"; // Match the background
+    pdfContent.style.color = "#fff"; // Match the text color
+    pdfContent.style.fontFamily = "Arial, sans-serif"; // Set a readable font
+    pdfContent.style.fontSize = "14px"; // Set a base font size
+    pdfContent.style.lineHeight = "1.5"; // Improve line height for readability
+
+    pdfContent.innerHTML = `
+      <h2 style="color: white; text-align: left;  font-size:50px;">${
+        note.title
+      }</h2>
+      <p style="color: white; margin-top:25px;"><strong>Content:</strong></p>
+      <div style="color: white; text-align: left; margin-bottom: 20px; font-size:35px;">${
+        note.content
+      }</div>
+      <p style="color: white; font-size:25px;"><strong>Category:</strong> ${
+        note.category
+      }</p>
+      <p style="color: white; font-size:25px;"><strong>Tags:</strong> ${
+        Array.isArray(note.tags) ? note.tags.join(", ") : "No tags"
+      }</p>
+    `;
+
+    document.body.appendChild(pdfContent); // Append to body for rendering
 
     try {
-      const canvas = await html2canvas(element, { useCORS: true });
+      const canvas = await html2canvas(pdfContent, { useCORS: true });
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF();
-      const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const imgWidth = 190; // Adjust width as needed
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
 
       pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
       pdf.save(`${note.title}.pdf`);
     } catch (error) {
       console.error("Error exporting PDF:", error);
       alert("Failed to export PDF. Please check the console for details.");
+    } finally {
+      document.body.removeChild(pdfContent); // Clean up after rendering
     }
   };
-
   return (
     <Box
       id={`note-detail-${note._id}`}

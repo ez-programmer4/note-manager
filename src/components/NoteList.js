@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import html2canvas from "html2canvas";
 import { getNotes } from "../api";
 import {
   Box,
@@ -28,14 +27,12 @@ import {
   EditIcon,
   DeleteIcon,
   ViewIcon,
-  DownloadIcon,
   ExternalLinkIcon,
   ArrowUpIcon,
   CalendarIcon,
   TimeIcon,
 } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
-import jsPDF from "jspdf";
 import NoteDetail from "./NoteDetail";
 import DeleteNote from "./DeleteNote";
 
@@ -141,7 +138,7 @@ const NoteList = ({ token }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/api/notes/${noteId}/favorite`,
+        `https://note-manager-backend-1.onrender.com/api/notes/${noteId}/favorite`,
         {
           method: "PUT",
           headers: {
@@ -159,38 +156,6 @@ const NoteList = ({ token }) => {
       );
     } catch (error) {
       console.error("Error updating favorite status:", error);
-    }
-  };
-
-  const exportToPDF = async (note) => {
-    if (!note) {
-      console.error("No note provided for export");
-      alert("No note available to export.");
-      return;
-    }
-
-    if (!noteDetailRef.current) {
-      console.error("Note detail element not found");
-      alert("Note detail not available for export.");
-      return;
-    }
-
-    try {
-      const canvas = await html2canvas(noteDetailRef.current, {
-        useCORS: true,
-        scale: 2,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF();
-      const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-      pdf.save(`${note.title}.pdf`);
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      alert("Failed to generate PDF. Please check console for details.");
     }
   };
 
@@ -325,13 +290,14 @@ const NoteList = ({ token }) => {
                 color="white"
                 borderColor="whiteAlpha.600"
                 _placeholder={{ color: "whiteAlpha.600" }}
-                flex={{ base: "1", md: "auto" }}
+                flex={{ base: searchVisible ? "1" : "0", md: "auto" }}
                 transition="all 0.3s"
                 mt={searchVisible ? 2 : 0}
                 display={{
                   base: searchVisible ? "block" : "none",
                   md: "block",
                 }}
+                size={searchVisible ? "lg" : "md"}
               />
               <Text color="white" ml={2}>
                 {selectedFilter}
@@ -453,13 +419,6 @@ const NoteList = ({ token }) => {
                               icon={<ExternalLinkIcon />}
                             >
                               Share
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => exportToPDF(note)}
-                              color="black"
-                              icon={<DownloadIcon />}
-                            >
-                              Export to PDF
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleDelete(note._id)}

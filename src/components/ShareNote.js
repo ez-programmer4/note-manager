@@ -28,7 +28,7 @@ const ShareNote = ({ noteId, isOpen, onClose }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/notes/${noteId}/share`,
+        `https://note-manager-backend-1.onrender.com/api/notes/${noteId}/share`,
         {
           method: "POST",
           headers: {

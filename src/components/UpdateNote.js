@@ -35,12 +35,15 @@ const UpdateNote = () => {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          `https://note-manager-backend-1.onrender.com/api/notes/${id}`,
+          `https://note-manager-backend-1.onrender.com/api/notes/${id}`, // Changed to localhost
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setNote({ ...response.data, tags: response.data.tags.join(", ") });
+        setNote({
+          ...response.data,
+          tags: response.data.tags.join(", "), // Convert tags array to comma-separated string
+        });
       } catch (err) {
         console.error("Error fetching note:", err);
         setError("Failed to fetch note. Please try again.");
@@ -60,9 +63,10 @@ const UpdateNote = () => {
 
     try {
       const token = localStorage.getItem("token");
+      const updatedTags = note.tags.split(",").map((tag) => tag.trim());
       await axios.put(
-        `https://note-manager-backend-1.onrender.com/api/notes/${id}`,
-        { ...note, tags: note.tags.split(",").map((tag) => tag.trim()) },
+        `https://note-manager-backend-1.onrender.com/api/notes/${id}`, // Changed to localhost
+        { ...note, tags: updatedTags },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
