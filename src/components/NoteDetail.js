@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Heading, Text, Button, VStack, Divider } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Text,
+  Button,
+  VStack,
+  Divider,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { CloseIcon, EditIcon, DownloadIcon } from "@chakra-ui/icons";
 import ShareNote from "./ShareNote";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +31,7 @@ const NoteDetail = ({ note, onClose }) => {
     pdfContent.style.lineHeight = "1.5"; // Improve line height for readability
 
     pdfContent.innerHTML = `
-      <h2 style="color: white; text-align: left;  font-size:50px;">${
+      <h2 style="color: white; text-align: left; font-size:50px;">${
         note.title
       }</h2>
       <p style="color: white; margin-top:25px;"><strong>Content:</strong></p>
@@ -56,6 +64,7 @@ const NoteDetail = ({ note, onClose }) => {
       document.body.removeChild(pdfContent); // Clean up after rendering
     }
   };
+
   return (
     <Box
       id={`note-detail-${note._id}`}
@@ -99,12 +108,14 @@ const NoteDetail = ({ note, onClose }) => {
         </Text>
       </VStack>
       <ShareNote noteId={note._id} />
-      <Box mt={4} display="flex" justifyContent="space-between">
+      <VStack mt={4} spacing={4} align="stretch" width="100%">
+        {" "}
+        {/* Use VStack to stack buttons vertically */}
         <Button
           colorScheme="blue"
           onClick={handleEdit}
           leftIcon={<EditIcon />}
-          mr={2}
+          width="100%" // Make button full width
         >
           Edit
         </Button>
@@ -112,14 +123,19 @@ const NoteDetail = ({ note, onClose }) => {
           colorScheme="green"
           onClick={exportToPDF}
           leftIcon={<DownloadIcon />}
-          mr={2}
+          width="100%" // Make button full width
         >
           Export to PDF
         </Button>
-        <Button colorScheme="gray" onClick={onClose} leftIcon={<CloseIcon />}>
+        <Button
+          colorScheme="gray"
+          onClick={onClose}
+          leftIcon={<CloseIcon />}
+          width="100%" // Make button full width
+        >
           Close
         </Button>
-      </Box>
+      </VStack>
     </Box>
   );
 };
